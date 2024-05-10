@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # Create main project.
-project(airsea VERSION 0.1.1 LANGUAGES Fortran C)
+project(awex VERSION 0.1.1 LANGUAGES Fortran C)
 
 # Specify position-independent code since we will build a shared library.
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -9,7 +9,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Use solution folders in IDEs
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_library(cairsea
+add_library(cawex
    src/airsea_fluxes.F90
    src/airsea_variables.F90
    src/humidity.F90
@@ -22,24 +22,24 @@ add_library(cairsea
    src/albedo_water.F90
    src/shortwave_radiation.F90
 )
-target_compile_definitions(cairsea PRIVATE GUSTINESS)
+target_compile_definitions(cawex PRIVATE GUSTINESS)
 
 if (MSVC)
-  target_compile_options(cairsea PRIVATE /libs:static)
+  target_compile_options(cawex PRIVATE /libs:static)
 endif()
 
 # Find target Python interpreter.
 find_package(Python3 COMPONENTS Interpreter Development NumPy)
 
-add_custom_command(OUTPUT _pyairsea.c
-  COMMENT "Creating ${CMAKE_CURRENT_BINARY_DIR}/_pyairsea.c from ${CMAKE_CURRENT_SOURCE_DIR}/_pyairsea.pyx"
-  COMMAND Python3::Interpreter -m cython "${CMAKE_CURRENT_SOURCE_DIR}/_pyairsea.pyx" -o "${CMAKE_CURRENT_BINARY_DIR}/_pyairsea.c"
-  DEPENDS _pyairsea.pyx
+add_custom_command(OUTPUT _awex.c
+  COMMENT "Creating ${CMAKE_CURRENT_BINARY_DIR}/_awex.c from ${CMAKE_CURRENT_SOURCE_DIR}/_awex.pyx"
+  COMMAND Python3::Interpreter -m cython "${CMAKE_CURRENT_SOURCE_DIR}/_awex.pyx" -o "${CMAKE_CURRENT_BINARY_DIR}/_awex.c"
+  DEPENDS _awex.pyx
   VERBATIM
 )
 
-Python3_add_library(_pyairsea MODULE
-  "${CMAKE_CURRENT_BINARY_DIR}/_pyairsea.c")
-target_link_libraries(_pyairsea PRIVATE cairsea Python3::NumPy)
+Python3_add_library(_awex MODULE
+  "${CMAKE_CURRENT_BINARY_DIR}/_awex.c")
+target_link_libraries(_awex PRIVATE cawex Python3::NumPy)
 
-install(TARGETS _pyairsea DESTINATION .)
+install(TARGETS _awex DESTINATION .)

@@ -1,6 +1,6 @@
 import enum
 
-from ._pyairsea import *
+from ._awex import *
 
 
 class HumidityMeasure(enum.IntEnum):

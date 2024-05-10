@@ -60,9 +60,9 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    packages=find_packages(include=["pyairsea*"]),
-    package_data={"pyairsea": ["*.so", "*.dll", "*.dylib", "*.pyd"]},
-    ext_modules=[CMakeExtension("pyairsea._pyairsea", os.path.dirname(__file__))],
+    packages=find_packages(include=["awex*"]),
+    package_data={"awex": ["*.so", "*.dll", "*.dylib", "*.pyd"]},
+    ext_modules=[CMakeExtension("awex._awex", os.path.dirname(__file__))],
     zip_safe=False,
     cmdclass={"build_ext": CMakeBuild},
 )
