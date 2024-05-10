@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
       fail-fast: false
     defaults:
       run:
@@ -21,6 +21,6 @@ jobs:
         run: pip install -v .
       - name: Run notebooks
         run: |
-          conda install -c conda-forge ipython jupyterlab ipympl cmocean matplotlib pyqt
+          conda install -c conda-forge ipython jupyterlab ipympl matplotlib-base
           cd examples
           ipython --gui tk -c "%run formulations.ipynb"
