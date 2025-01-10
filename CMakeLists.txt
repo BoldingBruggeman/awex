@@ -24,7 +24,7 @@ add_library(cawex
 )
 target_compile_definitions(cawex PRIVATE GUSTINESS)
 
-if (MSVC)
+if (WIN32 AND "${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
   target_compile_options(cawex PRIVATE /libs:static)
 endif()
 
