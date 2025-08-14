@@ -30,7 +30,7 @@
    real(rk), public, parameter         :: cpa=1008._rk
    real(rk), public, parameter         :: cpw=3985._rk
    real(rk), public, parameter         :: emiss=0.97_rk
-   real(rk), public, parameter         :: bolz=5.67e-8_rk
+   real(rk), public, parameter         :: bolz=5.670374419e-8
    real(rk), public, parameter         :: kelvin=273.15_rk
    real(rk), public, parameter         :: Ra = gas_constant_air_si ! [J kg-1 K-1]
    real(rk), public, parameter         :: Rw = gas_constant_h2o_si ! [J kg-1 K-1]
