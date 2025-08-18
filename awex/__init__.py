@@ -12,6 +12,12 @@ class HumidityMeasure(enum.IntEnum):
     SPECIFIC_HUMIDITY = 4  #: specific humidity in kg kg-1
 
 
+class ShortwaveMethod(enum.IntEnum):
+    """Method used to calculate shortwave radiation"""
+
+    ROSATI_MIYAKODA = 1  #: Rosati & Miyakodi (1988)
+
+
 class LongwaveMethod(enum.IntEnum):
     """Method used to calculate longwave radiation"""
 
