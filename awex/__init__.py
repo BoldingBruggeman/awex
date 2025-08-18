@@ -15,22 +15,12 @@ class HumidityMeasure(enum.IntEnum):
 class LongwaveMethod(enum.IntEnum):
     """Method used to calculate longwave radiation"""
 
-    NET = 1  #: Surface net longwave radiation - ERA5 - str
-    DOWNWARDS = 2  #: Surface downwards longwave radiation downwards - ERA5 - strd
-    CLARK = 3  #: Clark et al. (1974)
-    HASTENRATH_LAMB = 4  #: Hastenrath and Lamb (1978)
-    BIGNAMI = 5  #: Bignami et al. (1995)
-    BERLIAND_BERLIAND = 6  #: Berliand & Berliand (1952)
-    JOSEY1 = 7  #: Josey et.al. 2003 - (J1,9)
-    JOSEY2 = 8  #: Josey et.al. 2003 - (J2,14)
-
-
-class ShortwaveMethod(enum.IntEnum):
-    """Method used to calculate shortwave radiation"""
-
-    NET = 1  #: Surface net shortwave radiation - ERA5 - ssr
-    DOWNWARDS = 2  #: Surface shortwave radiation downwards - ERA5 - ssrd
-    ROSATI_MIYAKODA = 3  #: Rosati & Miyakodi (1988)
+    CLARK = 1  #: Clark et al. (1974)
+    HASTENRATH_LAMB = 2  #: Hastenrath and Lamb (1978)
+    BIGNAMI = 3  #: Bignami et al. (1995)
+    BERLIAND_BERLIAND = 4  #: Berliand & Berliand (1952)
+    JOSEY1 = 5  #: Josey et.al. 2003 - (J1,9)
+    JOSEY2 = 6  #: Josey et.al. 2003 - (J2,14)
 
 
 class AlbedoMethod(enum.IntEnum):
