@@ -38,7 +38,7 @@ add_custom_command(OUTPUT _awex.c
   VERBATIM
 )
 
-Python3_add_library(_awex MODULE
+Python3_add_library(_awex MODULE WITH_SOABI
   "${CMAKE_CURRENT_BINARY_DIR}/_awex.c")
 target_link_libraries(_awex PRIVATE cawex Python3::NumPy)
 
