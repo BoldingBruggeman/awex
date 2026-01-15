@@ -1,2 +1,5 @@
 /awex.egg-info
 /build
+*.pyd
+/awex/__pycache__
+/setup.cfg
