@@ -84,50 +84,61 @@ contains
    real(rk), parameter, dimension(5) :: pe_d=(/ -0.15_rk , 1._rk, 1._rk, 1._rk, 1._rk /)
    real(rk), parameter, dimension(5) :: pe_h=(/ -0.157_rk, 1._rk, 1._rk, 1._rk, 1._rk /)
    real(rk), parameter, dimension(5) :: pe_e=(/ -0.16_rk , 1._rk, 1._rk, 1._rk, 1._rk /)
+
+   real(rk), parameter :: eps = 1.0e-10_rk
 !EOP
 !-----------------------------------------------------------------------
 !BOC
-!  Stability
-   s0 = 0.25_rk * (sst - airt) / (w + 1.0e-10_rk)**2
-   s = s0 * abs(s0) / (abs(s0) + 0.01_rk)
 
-! Transfer coefficient for heat and momentum
-!   if (w < 0.3) then
-   if (w < 2.2_rk) then
-      cdd = (be_d(1) * w**pe_d(1)) * 1.0e-3_rk
-      chd = (be_h(1) * w**pe_h(1)) * 1.0e-3_rk
-      ced = (be_e(1) * w**pe_e(1)) * 1.0e-3_rk
+! Transfer coefficient for heat and momentum under neutral conditions
+! Multiplied by 1000 (hence multiplication by 0.001 later)
+! Eqs A1-A3 in Kondo (1975)
+   if (w < 2.2_rk) then    ! only valid from w > 0.3 in Kondo (1975)
+      cdd = be_d(1) * (w + eps)**pe_d(1)
+      chd = be_h(1) * (w + eps)**pe_h(1)
+      ced = be_e(1) * (w + eps)**pe_e(1)
    else if (w < 5.0_rk) then
-      cdd = (ae_d(2) + be_d(2) * w) * 1.0e-3_rk
-      chd = (ae_h(2) + be_h(2) * w) * 1.0e-3_rk
-      ced = (ae_e(2) + be_e(2) * w) * 1.0e-3_rk
+      cdd = ae_d(2) + be_d(2) * w
+      chd = ae_h(2) + be_h(2) * w
+      ced = ae_e(2) + be_e(2) * w
    else if (w < 8.0_rk) then
-      cdd = (ae_d(3) + be_d(3) * w) * 1.0e-3_rk
-      chd = (ae_h(3) + be_h(3) * w) * 1.0e-3_rk
-      ced = (ae_e(3) + be_e(3) * w) * 1.0e-3_rk
+      cdd = ae_d(3) + be_d(3) * w
+      chd = ae_h(3) + be_h(3) * w
+      ced = ae_e(3) + be_e(3) * w
    else if (w < 25.0_rk) then
-      cdd = (ae_d(4) + be_d(4) * w) * 1.0e-3_rk
-      chd = (ae_h(4) + be_h(4) * w + ce_h(4) * (w - 8.0_rk)**2) * 1.0e-3_rk
-      ced = (ae_e(4) + be_e(4) * w + ce_e(4) * (w - 8.0_rk)**2) * 1.0e-3_rk
+      cdd = ae_d(4) + be_d(4) * w
+      chd = ae_h(4) + be_h(4) * w + ce_h(4) * (w - 8.0_rk)**2
+      ced = ae_e(4) + be_e(4) * w + ce_e(4) * (w - 8.0_rk)**2
    else
-      cdd = (ae_d(5) + be_d(5) * w) * 1.0e-3_rk
-      chd = (ae_h(5) + be_h(5) * w) * 1.0e-3_rk
-      ced = (ae_e(5) + be_e(5) * w) * 1.0e-3_rk
+      cdd = ae_d(5) + be_d(5) * w
+      chd = ae_h(5) + be_h(5) * w
+      ced = ae_e(5) + be_e(5) * w
    end if
 
-   if(s < 0._rk) then
-      if (s > -3.3_rk) then
-         x = 0.1_rk + 0.03_rk * s + 0.9_rk * exp(4.8_rk * s)
-      else
-         x = 0.0_rk
-      end if
+   ! Stability parameter - Eq A11 in Kondo (1975), except we have a prefactor 0.25.
+   ! Kondo does include a factor 1 / (1 + log10(10/z))**2, which equals approx. 0.35 for z=2 m.
+   ! However, that is not quite 0.25, and as our w is defined at 10 m height while our airt
+   ! is at 2 m, it is unclear what z should be.
+   s0 = 0.25_rk * (sst - airt) / (w + eps)**2
+   s = s0 * abs(s0) / (abs(s0) + 0.01_rk)
+
+   if (s <= -3.3_rk) then
+      ! Eq A11 in Kondo (1975)
+      cdd = 0.0_rk
+      chd = 0.0_rk
+      ced = 0.0_rk
+   else if(s < 0.0_rk) then
+      ! Eq A11 in Kondo (1975)
+      x = (0.1_rk + 0.03_rk * s + 0.9_rk * exp(4.8_rk * s)) * 0.001_rk
       cdd = x * cdd
       chd = x * chd
       ced = x * ced
    else
-      cdd = cdd * (1.0_rk + 0.47_rk * sqrt(s))
-      chd = chd * (1.0_rk + 0.63_rk * sqrt(s))
-      ced = ced * (1.0_rk + 0.63_rk * sqrt(s))
+      ! Eq A12 in Kondo (1975)
+      cdd = cdd * (1.0_rk + 0.47_rk * sqrt(s)) * 0.001_rk
+      x = (1.0_rk + 0.63_rk * sqrt(s)) * 0.001_rk
+      chd = chd * x
+      ced = ced * x
    end if
 
    end subroutine kondo
