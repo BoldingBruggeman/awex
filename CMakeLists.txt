@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.15)
+# * WITH_SOABI requires 3.17 - https://cmake.org/cmake/help/latest/module/FindPython3.html
+cmake_minimum_required(VERSION 3.17)
 
 # Create main project.
 project(awex VERSION 0.1.4 LANGUAGES Fortran C)
